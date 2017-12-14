@@ -1,5 +1,6 @@
 import hashlib
 import json
+import sys
 from textwrap import dedent
 from time import time
 from uuid import uuid4
@@ -74,5 +75,52 @@ def full_chain():
     return jsonify(response), 200
 
 
+@app.route('/nodes/register', methods=['POST'])
+def register_nodes():
+    values = request.get_json()
+
+    nodes = values.get('nodes')
+    if nodes is None:
+        return "Error: Please supply a valid list of nodes", 400
+
+    for node in nodes:
+        blockchain.register_node(node)
+
+    response = {
+        'message': 'New nodes have been added',
+        'total_nodes': list(blockchain.nodes),
+    }
+    return jsonify(response), 201
+
+
+@app.route('/nodes/resolve', methods=['GET'])
+def consensus():
+    replaced = blockchain.resolve_conflicts()
+
+    if replaced:
+        response = {
+            'message': 'Our chain was replaced',
+            'new_chain': blockchain.chain
+        }
+    else:
+        response = {
+            'message': 'Our chain is authoritative',
+            'chain': blockchain.chain
+        }
+
+    return jsonify(response), 200
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = 3000
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+            if port <= 3000:
+                raise ValueError()
+        except ValueError:
+            print('Please provide a valid port, higher than 3000, you gave {}'.format(
+                sys.argv[1]))
+            exit()
+
+    app.run(host='127.0.0.1', port=port)
