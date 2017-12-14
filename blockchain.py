@@ -4,6 +4,8 @@ from time import time
 from urllib.parse import urlparse
 from uuid import uuid4
 
+import requests
+
 
 class Blockchain(object):
     def __init__(self):
@@ -78,7 +80,8 @@ class Blockchain(object):
                     max_length = length
                     new_chain = chain
 
-        # Replace our chain if we discovered a new, valid chain longer than ours
+        # Replace our chain if we discovered a new, valid chain longer than
+        # ours
         if new_chain:
             self.chain = new_chain
             return True

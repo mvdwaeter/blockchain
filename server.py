@@ -119,8 +119,8 @@ if __name__ == '__main__':
             if port <= 3000:
                 raise ValueError()
         except ValueError:
-            print('Please provide a valid port, higher than 3000, you gave {}'.format(
-                sys.argv[1]))
+            print('Please provide a valid port, higher than 3000,'
+                  ' you gave {}'.format(sys.argv[1]))
             exit()
 
-    app.run(host='127.0.0.1', port=port)
+    app.run(host='0.0.0.0', port=port)
