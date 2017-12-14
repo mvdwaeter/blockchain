@@ -67,7 +67,7 @@ class Blockchain(object):
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
-   def proof_of_work(self, last_proof):
+    def proof_of_work(self, last_proof):
         """
         Simple Proof of Work Algorithm:
          - Find a number p' such that hash(pp') contains leading 4 zeroes,
